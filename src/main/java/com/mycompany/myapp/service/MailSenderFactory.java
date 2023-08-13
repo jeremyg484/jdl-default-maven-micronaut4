@@ -1,0 +1,49 @@
+package com.mycompany.myapp.service;
+
+import io.micronaut.context.annotation.Factory;
+import io.micronaut.context.annotation.Replaces;
+import io.micronaut.context.annotation.Value;
+import io.micronaut.email.javamail.sender.MailPropertiesProvider;
+import jakarta.inject.Singleton;
+import java.util.Map;
+import java.util.Properties;
+
+@Factory
+public class MailSenderFactory {
+
+    private final String TRANSPORT_PROTOCOL = "mail.transport.protocol";
+
+    private final String SMTP = "smtp";
+
+    private final String SMTP_HOST = "mail.smtp.host";
+
+    private final String SMTP_PORT = "mail.smtp.port";
+
+    private final String SMTP_USERNAME = "mail.smtp.username";
+
+    private final String SMTP_PASSWORD = "mail.smtp.password";
+
+    @Value("${mail.host:localhost}")
+    private String host;
+
+    @Value("${mail.port:25}")
+    private int port;
+
+    @Value("${mail.username:''}")
+    private String username;
+
+    @Value("${mail.password:''}")
+    private String password;
+
+    @Singleton
+    @Replaces(MailPropertiesProvider.class)
+    MailPropertiesProvider mailPropertiesProvider() {
+        return () -> {
+            Properties mailProperties = new Properties();
+            mailProperties.putAll(
+                Map.of(TRANSPORT_PROTOCOL, SMTP, SMTP_HOST, host, SMTP_PORT, port, SMTP_USERNAME, username, SMTP_PASSWORD, password)
+            );
+            return mailProperties;
+        };
+    }
+}

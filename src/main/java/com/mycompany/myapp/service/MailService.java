@@ -1,0 +1,104 @@
+package com.mycompany.myapp.service;
+
+import com.mycompany.myapp.domain.User;
+import com.mycompany.myapp.util.JHipsterProperties;
+import com.mycompany.myapp.util.UserLocaleAwareThymeleafViewsRenderer;
+import io.micronaut.context.MessageSource;
+import io.micronaut.email.*;
+import io.micronaut.email.template.TemplateBody;
+import io.micronaut.scheduling.annotation.Async;
+import io.micronaut.views.ModelAndView;
+import jakarta.inject.Singleton;
+import java.util.Locale;
+import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * Service for sending emails.
+ * <p>
+ * We use the {@link Async} annotation to send emails asynchronously.
+ */
+@Singleton
+public class MailService {
+
+    private final Logger log = LoggerFactory.getLogger(MailService.class);
+
+    private static final String USER = "user";
+
+    private static final String BASE_URL = "baseUrl";
+
+    private final JHipsterProperties jHipsterProperties;
+
+    private final EmailSender<?, ?> emailSender;
+
+    private final MessageSource messageSource;
+
+    public MailService(JHipsterProperties jHipsterProperties, EmailSender<?, ?> emailSender, MessageSource messageSource) {
+        this.jHipsterProperties = jHipsterProperties;
+        this.emailSender = emailSender;
+        this.messageSource = messageSource;
+    }
+
+    @Async
+    public void sendEmail(String to, String subject, String content, boolean isHtml) {
+        doSendEmail(to, subject, new StringBody(content, isHtml ? BodyType.HTML : BodyType.TEXT), isHtml);
+    }
+
+    @Async
+    public void sendEmailFromTemplate(User user, String templateName, String titleKey) {
+        Locale locale = Locale.forLanguageTag(user.getLangKey());
+        String subject = messageSource.getMessage(titleKey, MessageSource.MessageContext.of(locale)).orElse(null);
+
+        Map<String, Object> model = Map.of(
+            USER,
+            user,
+            BASE_URL,
+            jHipsterProperties.getMail().getBaseUrl(),
+            UserLocaleAwareThymeleafViewsRenderer.LOCALE_KEY,
+            user.getLangKey()
+        );
+
+        doSendEmail(user.getEmail(), subject, new TemplateBody<>(BodyType.HTML, new ModelAndView<>(templateName, model)), true);
+    }
+
+    private void doSendEmail(String to, String subject, Body content, boolean isHtml) {
+        log.debug("Send email[html '{}'] to '{}' with subject '{}' and content={}", isHtml, to, subject, content);
+
+        Email.Builder emailPopulatingBuilder = Email
+            .builder()
+            .to(to)
+            .from(jHipsterProperties.getMail().getFrom())
+            .subject(subject)
+            .body(content);
+
+        try {
+            emailSender.send(emailPopulatingBuilder);
+            log.debug("Sent email to User '{}'", to);
+        } catch (Exception e) {
+            if (log.isDebugEnabled()) {
+                log.warn("Email could not be sent to user '{}'", to, e);
+            } else {
+                log.warn("Email could not be sent to user '{}': {}", to, e.getMessage());
+            }
+        }
+    }
+
+    @Async
+    public void sendActivationEmail(User user) {
+        log.debug("Sending activation email to '{}'", user.getEmail());
+        sendEmailFromTemplate(user, "mail/activationEmail", "email.activation.title");
+    }
+
+    @Async
+    public void sendCreationEmail(User user) {
+        log.debug("Sending creation email to '{}'", user.getEmail());
+        sendEmailFromTemplate(user, "mail/creationEmail", "email.activation.title");
+    }
+
+    @Async
+    public void sendPasswordResetMail(User user) {
+        log.debug("Sending password reset email to '{}'", user.getEmail());
+        sendEmailFromTemplate(user, "mail/passwordResetEmail", "email.reset.title");
+    }
+}

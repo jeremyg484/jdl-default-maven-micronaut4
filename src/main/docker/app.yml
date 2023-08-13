@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  jhipster-app:
+    image: jhipster
+    environment:
+      - _JAVA_OPTIONS=-Xmx512m -Xms256m
+      - MICRONAUT_ENVIRONMENTS=prod
+      - JDBC_URL=jdbc:postgresql://jhipster-postgresql:5432/jhipster
+      - JHIPSTER_SLEEP=30 # gives time for other services to boot before the application
+    ports:
+      - 8080:8080
+  jhipster-postgresql:
+    extends:
+      file: postgresql.yml
+      service: jhipster-postgresql
