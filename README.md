@@ -6,8 +6,17 @@
 > While we are working to create a complete experience, there are likely some gaps.
 > Please [let us know](https://github.com/jhipster/generator-jhipster-micronaut/issues) if you encounter issues.
 
-This application was generated with the in-progress Micronaut framework 4 development version of [MHipster](https://github.com/jhipster/generator-jhipster-micronaut), a [Micronaut](https://micronaut.io) blueprint for [JHipster](https://www.jhipster.tech)!
+This application was generated with the *in-progress Micronaut framework 4 development version* of [MHipster](https://github.com/jhipster/generator-jhipster-micronaut), a [Micronaut](https://micronaut.io) blueprint for [JHipster](https://www.jhipster.tech)!
 You can find documentation and help at [https://github.com/jhipster/generator-jhipster-micronaut](https://github.com/jhipster/generator-jhipster-micronaut).
+
+The in-development blueprint is a continuation of the work found in [PR #267](https://github.com/jhipster/generator-jhipster-micronaut/pull/267).
+
+The active development version that generated this app is currently in a personal [micronaut-4 branch](https://github.com/jeremyg484/generator-jhipster-micronaut/tree/micronaut-4).
+
+Specifically, this application is generated (and updated as development of the blueprint continues) via the command:
+```
+mhipster jdl default --skip-jhipster-dependencies
+```
 
 ## Development
 
