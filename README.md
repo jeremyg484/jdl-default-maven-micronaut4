@@ -6,7 +6,7 @@
 > While we are working to create a complete experience, there are likely some gaps.
 > Please [let us know](https://github.com/jhipster/generator-jhipster-micronaut/issues) if you encounter issues.
 
-This application was generated with [MHipster](https://github.com/jhipster/generator-jhipster-micronaut), a [Micronaut](https://micronaut.io) blueprint for [JHipster](https://www.jhipster.tech)!
+This application was generated with the in-progress Micronaut framework 4 development version of [MHipster](https://github.com/jhipster/generator-jhipster-micronaut), a [Micronaut](https://micronaut.io) blueprint for [JHipster](https://www.jhipster.tech)!
 You can find documentation and help at [https://github.com/jhipster/generator-jhipster-micronaut](https://github.com/jhipster/generator-jhipster-micronaut).
 
 ## Development
