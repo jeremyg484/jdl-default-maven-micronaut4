@@ -29,11 +29,10 @@ import java.util.regex.Pattern;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.simplejavamail.api.email.Email;
-import org.simplejavamail.api.mailer.Mailer;
 import org.thymeleaf.TemplateEngine;
 
 /**
